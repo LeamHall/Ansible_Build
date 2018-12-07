@@ -1,0 +1,8 @@
+[user]
+	name = Leam Hall
+	email = leamhall@gmail.com
+[github]
+	user = LeamHall
+	token = 540d267ea221f0aed01f526c9dd6e67a
+[push]
+	default = current

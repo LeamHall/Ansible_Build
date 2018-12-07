@@ -1,0 +1,8 @@
+/var/log/ansible.log {
+  missingok
+  create 0660 root syseng
+  weekly
+  notifempty
+  compress
+  rotate 10
+}

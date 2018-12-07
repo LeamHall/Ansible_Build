@@ -1,0 +1,1 @@
+virt-install -n genesis -r 2048 --vcpus=1 -v -w bridge:br0  --disk path=/opt/virtuals/guests/genesis.img,size=15 --location /opt/iso/CentOS-6-minimal.iso --nographics --extra-args="ks=http://192.168.1.200/ks/genesis_ks.cfg ip=192.168.1.75 netmask=255.255.255.0 console=tty0 console=ttyS0,115200n8" 

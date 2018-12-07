@@ -1,0 +1,47 @@
+#! /bin/sh
+
+# Base script to call the 'official' tomcat scripts as tomcat.
+
+# chkconfig: 3 99 01
+
+stop() {
+  echo "Stopping script test"
+  su - tomcat /opt/tomcat/bin/shutdown.sh
+}
+
+start() {
+  echo "Starting script test"
+  su - tomcat /opt/tomcat/bin/startup.sh
+}
+
+restart() {
+  stop
+  sleep 20
+  start
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  #force-reload)
+  #  echo "Force-reloading script test"
+  #  touch /var/test-file-force-reload
+  #  ;;
+  #status)
+  #  echo "Status of test"
+  #  touch /var/test-file-status
+  #  ;;
+  *)
+    echo "Usage: /etc/init.d/tomcat {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0

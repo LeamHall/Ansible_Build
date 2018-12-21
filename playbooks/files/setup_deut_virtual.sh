@@ -1,1 +1,0 @@
-virt-install -n deut -r 2048 --vcpus=1 -v -w bridge:br0  --disk path=/opt/virtuals/guests/deut.img,size=20 --location /opt/iso/rhel-server-6.9-x86_64-dvd.iso --nographics --extra-args="ks=http://192.168.1.200/ks/deut_ks.cfg ip=192.168.1.79 netmask=255.255.255.0 console=tty0 console=ttyS0,115200n8" 

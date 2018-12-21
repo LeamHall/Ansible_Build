@@ -1,0 +1,32 @@
+# base_server_configs.yml
+# Set up the infrastrucutre and 'normal' stuff.
+
+- name: config_resolv_conf
+  copy:
+    src:    resolv.conf
+    dest:   /etc/resolv.conf
+    mode:   0644
+    owner:  root
+    group:  root
+
+- name: install_ntp
+  yum:
+    name:   ntp
+    state:  latest
+
+- name: config_ntp
+  file:
+    src:    ntp.conf
+    dest:   /etc/ntp.conf
+    mode:   0644
+    owner:  root
+    group:  root
+
+- name: chkconfig_ntpd_on
+  service:
+    name:     "{{ item }}"
+    enabled:  yes
+  with_items:
+    - ntpd
+    - ntpdate
+

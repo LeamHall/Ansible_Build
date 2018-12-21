@@ -1,0 +1,19 @@
+---
+# Patch servers
+#
+- name: patch_yum_based_hosts
+  yum:
+    name: "*"
+    state: latest
+  when: ansible_distribution == 'CentOS'
+
+- name: patch_dnf_based_hosts
+  dnf:
+    name: "*"
+    state: latest
+  when: ansible_distribution == 'Fedora'
+
+- name: ensure_forcefsck_present
+  file:
+    name:   /forcefsck
+    state:  touch

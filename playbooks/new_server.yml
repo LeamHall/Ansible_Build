@@ -1,0 +1,16 @@
+# new_server.yml
+# All the basic configs.
+
+- hosts:  all
+  become: true
+
+  tasks:
+    - include: tasks/base_server_configs.yml
+
+    - include: tasks/patch.yml
+
+    - include: tasks/add_rpms.yml
+
+    - include: tasks/reboot_node_tasks.yml
+
+

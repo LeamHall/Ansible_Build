@@ -1,0 +1,15 @@
+# add_rpms.yml
+---
+# Testing this list adding.
+- name: yum_install_rpms
+  yum:
+    name: "{{ group_rpms_to_add }}"
+    state: latest
+  when: ansible_distribution == 'CentOS'
+
+- name: dnf_install_rpms
+  dnf:
+    name: "{{ group_rpms_to_add }}"
+    state: latest
+  when: ansible_distribution == 'Fedora'
+

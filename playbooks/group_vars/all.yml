@@ -1,0 +1,5 @@
+---
+
+group_rpms_to_add:
+  - 'git'
+  - 'tree'

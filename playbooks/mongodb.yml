@@ -1,0 +1,55 @@
+---
+- hosts: db02
+  become: yes
+
+  tasks:
+    - name: copy_in_disable_transparent_hugepages
+      copy:
+        src:    disable_transparent_hugepages
+        dest:   /etc/init.d
+        owner:  root
+        group:  root
+        mode:   0755
+      notify:   
+        - disable_transparent_hugepages
+        - restart_mongodb
+        
+    - name: copy_in_repo
+      copy:
+        src:    mongodb-org-4.0.repo
+        dest:   /etc/yum.repos.d
+        owner:  root
+        group:  root
+        mode:   0644
+
+    - name: install_mongodb
+      yum:
+        name:   mongodb-org
+        state:  latest
+      notify: restart_mongodb 
+
+    - name: open_config
+      lineinfile:
+        path:       /etc/mongod.conf
+        state:      present
+        #firstmatch: yes
+        backrefs:   yes
+        regexp:     '^(\s*)bindIp: 127.0.0.1(.*)$' 
+        line:       '\1bindIp: 0.0.0.0\2'
+      notify:       restart_mongodb
+  
+
+  handlers: 
+    # Must be in the order to be run.
+    - name: disable_transparent_hugepages
+      service:
+        name:     disable_transparent_hugepages
+        state:    restarted
+        enabled:  yes 
+
+    - name: restart_mongodb
+      service:
+        name:   mongod
+        state:  restarted
+        enabled:  yes 
+        

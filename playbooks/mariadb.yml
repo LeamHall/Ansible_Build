@@ -1,0 +1,36 @@
+---
+- hosts: db01
+  become: yes
+
+  tasks:
+    - name: copy_in_repo
+      copy:
+        src:    mariadb.repo
+        dest:   /etc/yum.repos.d
+        owner:  root
+        group:  root
+        mode:   0644
+
+    - name: import_gpg_key
+      rpm_key:
+        state:  present
+        key:    https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+
+    - name: install_mariadb
+      yum:
+        name:   {{ item }}
+        state:  latest
+      with_items:
+        - 'MariaDB-server'
+        - 'MariaDB-client'
+      notify:   restart_mariadb 
+
+  handlers: 
+    # Must be in the order to be run.
+
+    - name: restart_mariadb
+      service:
+        name:   mariadb
+        state:  restarted
+        enabled:  yes 
+        

@@ -64,3 +64,6 @@ Usage
     Select "Freestyle project"
     "OK"
 
+  Note: The Jenkins tour seems to want Docker.
+  https://docs.docker.com/install/linux/docker-ce/fedora/#install-using-the-repository
+

@@ -41,11 +41,6 @@ Usage
   My notes are based on learning Jenkins as I document it. If you know 
   what you're doing, feel free to skip this part.  :)
 
-  On http://localhost:8080/newJob
-    "Enter an item name"  -> perl_test
-    Select "Freestyle project"
-    "OK"
-
   Adding a user
   =============
 
@@ -60,6 +55,12 @@ Usage
   Down the page, add your ssh public key.
   Click Save.
 
-  
 
+  Starting a Project
+  =================
+  
+  On http://localhost:8080/newJob
+    "Enter an item name"  -> perl_test
+    Select "Freestyle project"
+    "OK"
 

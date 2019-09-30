@@ -18,7 +18,7 @@
 
     - name: install_mariadb
       yum:
-        name:   {{ item }}
+        name:   "{{ item }}"
         state:  latest
       with_items:
         - 'MariaDB-server'

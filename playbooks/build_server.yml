@@ -1,0 +1,158 @@
+# build_server.yml
+# To stand up a server able to build other Linux servers.
+
+---
+
+- hosts:  b2532_build_server
+  become: yes
+
+  vars:
+    rpms_to_install: 
+      - 'httpd'
+      - 'git'
+      - 'ansible'
+
+    group_name:     "syseng"
+    group_gid:      "500"
+    iso_src_dir:    "/opt/iso"
+    c6_iso:         "CentOS-6.iso"
+    c7_iso:         "CentOS-7.iso"
+    web_dir:        "/var/www/html"
+    ks_dir:         "{{ web_dir }}/ks" 
+    c6_repo_dir:    "{{ web_dir }}/repo/centos/6/os"
+    c7_repo_dir:    "{{ web_dir }}/repo/centos/7/os"
+    
+  tasks:
+
+    - name: ensure_syseng_group_set
+      group:
+        name:   "{{ group_name }}"
+        gid:    "{{ group_gid }}"
+        state:  present
+        system: yes
+
+    - name: add_rpms
+      yum:
+        name: "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ rpms_to_install }}"
+    
+    - name: make_ks_dir
+      file:
+        path:   /var/www/html/ks
+        state:  directory
+        mode:   0775
+        owner:  root
+        group:  "{{ group_name }}"
+
+    - name: make_ks_files_dir
+      file:
+        path:   /var/www/html/ks/files
+        state:  directory
+        mode:   0775
+        owner:  root
+        group:  "{{ group_name }}"
+ 
+    - name: copy_ks_files
+      copy:
+        src:    "{{ item }}"
+        dest:   "/var/www/html/ks/{{ item }}"
+        mode:   0775
+        owner:  root
+        group:  "{{ group_name }}"
+      with_fileglob:
+        - "/playbooks/files/*_ks.cfg"
+
+    - name: open_iptables_port_80
+      iptables:
+        chain:            INPUT
+        protocol:         tcp
+        source:           192.168.1.0/24
+        destination_port: http
+        ctstate:          NEW,ESTABLISHED
+        jump:             ACCEPT
+      notify:
+        - save_iptables_change
+        - restart_iptables
+       
+    - name: start_httpd
+      service:
+        name:     httpd
+        enabled:  yes 
+        state:    restarted
+
+    - name: copy_ssh_key
+      copy:
+        src:    "ansible_authorized_keys"
+        dest:   /var/www/html/ks/files/
+        mode:   0644
+        owner:  root
+        group:  "{{ group_name }}"
+
+    - name: make_iso_src_dir
+      file:
+        path:   "{{ iso_src_dir }}"
+        state:  directory
+        mode:   0755
+        owner:  root
+        group:  "{{ group_name }}"
+
+    - name: copy_in_c6_iso
+      copy:
+        src:    "{{ iso_src_dir }}/{{ c6_iso }}"
+        dest:   "{{ iso_src_dir }}"
+        owner:  root
+        group:  "{{ group_name }}"
+        mode:   0644
+
+    - name: copy_in_c7_iso
+      copy:
+        src:    "{{iso_src_dir }}/{{ c7_iso }}"
+        dest:   "{{ iso_src_dir }}"
+        owner:  root
+        group:  "{{ group_name }}"
+        mode:   0644
+
+    - name: make_build_c6_repo_dir
+      file:
+        path:   "{{ c6_repo_dir }}"
+        state:  directory
+        owner:  root
+        group:  root
+        mode:   0555
+
+    - name: make_build_c7_repo_dir
+      file:
+        path:   "{{ c7_repo_dir }}"
+        state:  directory
+        owner:  root
+        group:  root
+        mode:   0555
+
+    - name: mount_c6_iso
+      mount:
+        path:   "{{ c6_repo_dir }}"
+        state:  mounted
+        fstype: iso9660
+        src:    "{{ iso_src_dir }}/{{ c6_iso }}"
+        opts:   "loop"
+
+    - name: mount_c7_iso_image
+      mount:
+        path:   "{{ c7_repo_dir }}"
+        state:  mounted
+        fstype: iso9660
+        src:    "{{ iso_src_dir }}/{{ c7_iso }}"
+        opts:   "loop"
+
+  handlers:
+    - name: save_iptables_change
+      command: /sbin/service iptables save
+      args:
+        warn: false
+
+    - name: restart_iptables
+      service:
+        name:   iptables 
+        state:  restarted

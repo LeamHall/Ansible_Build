@@ -1,0 +1,39 @@
+# writer_node.yml
+---
+
+- hosts: laptop
+  become: true
+ 
+  vars: 
+    xbps_packages:
+      - 'gcc'
+      - 'libgcc'
+      - 'libgcc-devel'
+      - 'libreoffice'
+      - 'xdg-utils'
+      - 'xz'
+      - 'wget'
+
+    app_dir:  '/opt'
+
+
+  tasks:
+
+    - name: ensure_opt_present
+      file:
+        path:   "{{ app_dir }}" 
+        state:  directory
+        mode:   '0755'
+        owner:  root
+        group:  bin
+
+    - name: install_xbps_packages
+      xbps:
+        name: "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ xbps_packages }}"
+
+    - name: install_calibre
+      shell:  "wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin"
+

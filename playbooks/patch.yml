@@ -21,3 +21,9 @@
       file:
         name:   /forcefsck
         state:  touch
+      when: ansible_distribution == 'CentOS'
+
+    - name: patch_void_linux
+      #command: /usr/bin/xbps-install -Suvy
+      xbps: upgrade=yes
+      when: ansible_distribution == 'void'

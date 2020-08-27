@@ -22,11 +22,10 @@
     owner:  root
     group:  root
 
-- name: chkconfig_ntpd_on
+- name: service_ntpd_on
   service:
     name:     "{{ item }}"
     enabled:  yes
   with_items:
     - ntpd
-    - ntpdate
 

@@ -1,5 +1,7 @@
 ---
 
-group_rpms_to_add:
+group_packages_to_add:
   - 'git'
   - 'tree'
+  - 'vim'
+  - 'mlocate'

@@ -9,8 +9,8 @@
 
     - include: tasks/patch.yml
 
-    - include: tasks/add_rpms.yml
+    - include: tasks/add_packages.yml
 
-    - include: tasks/reboot_node_tasks.yml
+    #- include: tasks/reboot_node_tasks.yml
 
 

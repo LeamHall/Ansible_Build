@@ -1,1 +1,0 @@
-virt-install -n exodus -r 2048 --vcpus=1 -v -w bridge:br0  --disk path=/opt/virtuals/guests/exodus.img,size=15 --location /opt/iso/CentOS-6-minimal.iso --nographics --extra-args="ks=http://192.168.1.200/ks/exodus_ks.cfg ip=192.168.1.76 netmask=255.255.255.0 console=tty0 console=ttyS0,115200n8" 

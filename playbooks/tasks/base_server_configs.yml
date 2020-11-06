@@ -9,23 +9,42 @@
     owner:  root
     group:  root
 
-- name: install_ntp
-  yum:
-    name:   ntp
-    state:  latest
+- block:
+  - block:
+    - name: install_ntp
+      yum:
+        name:   ntp
+        state:  latest
 
-- name: config_ntp
-  copy:
-    src:    ntp.conf
-    dest:   /etc/ntp.conf
-    mode:   0644
-    owner:  root
-    group:  root
+    - name: config_ntp
+      copy:
+        src:    ntp.conf
+        dest:   /etc/ntp.conf
+        mode:   0644
+        owner:  root
+        group:  root
 
-- name: service_ntpd_on
-  service:
-    name:     "{{ item }}"
-    enabled:  yes
-  with_items:
-    - ntpd
+    - name: service_ntpd_on
+      service:
+        name:     ntpd
+        enabled:  yes
 
+    when: 
+      - ansible_distribution_major_version | int <= 7
+
+  - block:
+    - name: install_chrony
+      yum:
+        name:   chrony
+        state:  latest
+
+    - name: service_chrony_on
+      service:
+        name:     chronyd
+        enabled:  yes 
+
+    when:
+      - ansible_distribution_major_version | int >= 8
+
+  when:
+    - ansible_distribution == "CentOS"

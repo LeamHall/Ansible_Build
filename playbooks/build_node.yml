@@ -1,0 +1,46 @@
+# name:     build_node.yml
+# version:  0.0.1
+# date:     20210311
+# author:   Leam Hall
+# desc:     Install and configure a build node.
+
+---
+
+- hosts:  all
+
+  become: true
+
+  environment:
+    PATH: "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"
+
+  vars:
+    local_dir:  "/usr/local"
+    log_dir:    "{{ local_dir }}/logs"
+    src_dir:    "{{ local_dir }}/src"
+    tmp_dir:    "{{ local_dir }}/tmp"
+    
+    rpms_to_install:
+      - 'git'
+      - 'gcc'
+      - 'readline-devel'      
+
+  tasks:
+    - name: make_directories
+      file:
+        path:   "{{ item }}"
+        state:  directory 
+        mode:   0775
+        owner:  ansible
+        group:  wheel
+      with_items:
+        - "{{ local_dir }}"
+        - "{{ log_dir }}"
+        - "{{ src_dir }}"
+        - "{{ tmp_dir }}"
+
+    - name: install_rpms
+      yum:
+        name:   "{{ rpms_to_install }}"
+        state:  latest
+      when:
+        ansible_distribution_file_variety == "RedHat"

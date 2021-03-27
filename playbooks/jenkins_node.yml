@@ -1,0 +1,56 @@
+# jenkins_node.yml
+# To stand up a Jenkins server
+
+---
+
+- hosts:  b2532_app
+  become: yes
+
+  vars:
+    rpms_to_install:
+      - 'java-1.8.0-openjdk-devel'
+      - 'jenkins'
+
+    repo_file:  'jenkins.repo'
+    key_import: 'jenkins.io.key'
+    tmpdir:     '/var/tmp'
+
+  tasks:
+
+    - name: copy_in_repo_file
+      copy:
+        src:    "{{ repo_file }}"
+        dest:   "/etc/yum.repos.d/{{ repo_file }}"
+        mode:   0644
+        owner:  root
+        group:  root 
+
+    - name: copy_in_key
+      copy:
+        src:    "key_import"
+        dest:   "{{ tmp_dir }}/{{ key_import }}"
+        mode:   0644
+        owner:  root
+        group:  root
+
+    - name: rpm_import_key
+      ansible.builtin.rpm_key:
+        state:  present
+        key:    "{{ tmp_dir }}/{{ key_import }}"
+        
+    #- name: remove_key_file
+    #  file:
+    #    path:   "{{ tmp_dir }}/{{ key_import }}"
+    #    state:  absent
+
+    - name: install_rpms
+      yum:
+        name:   "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ rpms_to_install }}"
+
+    - name: reload_daemon
+      ansible.builtin.systemd:
+        daemon_reload:  yes
+  

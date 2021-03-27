@@ -1,0 +1,41 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+192.168.1.200	psalms
+192.168.1.201	proverbs
+
+192.168.1.50	josiah
+192.168.1.51	laptopa
+192.168.1.52    laptopb
+192.168.1.53    laptopc
+192.168.1.55	shaphan
+
+192.168.1.20	web01
+192.168.1.21	web02
+192.168.1.22	web03
+
+192.168.1.30	leam_solaris11
+192.168.1.31	leam_sles11
+192.168.1.32	leam_sles12
+192.168.1.33	leam_sles15
+192.168.1.34	leam_c6
+192.168.1.35	leam_c7
+192.168.1.36	leam_c8
+192.168.1.37	leammac13
+192.168.1.38	leammac14
+192.168.1.39	leammac15
+
+192.168.1.40	db01
+192.168.1.41	db02
+192.168.1.42	c7
+192.168.1.43	leammac11
+
+192.168.1.60	ansible
+192.168.1.61	wilbur
+
+192.168.1.70	leamprofiledmac15
+192.168.1.71	leamprofiledmac14
+
+192.168.1.80	jenkins_1
+
+

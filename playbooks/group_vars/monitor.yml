@@ -1,0 +1,23 @@
+---
+
+nagios_rpms_to_add:
+  - 'autoconf'
+  - 'automake'
+  - 'epel-release'
+  - 'gcc'
+  - 'gd'
+  - 'gd-devel'
+  - 'gettext'
+  - 'glibc'
+  - 'glibc-common'
+  - 'httpd'
+  - 'make'
+  - 'net-snmp'
+  - 'net-snmp-utils'
+  - 'openssl-devel'
+  - 'perl'
+  - 'perl-Net-SNMP'
+  - 'php'
+  - 'postfix'
+  - 'unzip'
+  - 'wget'

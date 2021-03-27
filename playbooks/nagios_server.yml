@@ -1,0 +1,14 @@
+# nagios_server.yml
+
+---
+- hosts:    monitor_1
+  become:   yes
+
+  tasks:
+    - name: install_rpms
+      yum:
+        name:   "{{ nagios_rpms_to_add }}"
+        state:  latest
+      when: ansible_distribution == "CentOS"
+        
+  

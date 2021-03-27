@@ -20,7 +20,7 @@
       yum:
         name:   'perl-Net-SNMP'
         state:  latest  
-      when: ansibile_distribution == "CentOS"
+      when: ansible_distribution == "CentOS"
 
     - name: copy_in_archive
       copy:

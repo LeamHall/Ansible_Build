@@ -4,11 +4,34 @@
 - hosts:    monitor_1
   become:   yes
 
+  vars:
+    nagios_core:  'nagioscore-nagios-4.4.6.tar.gz'
+    dest_dir:     '/var/tmp'
+
   tasks:
     - name: install_rpms
       yum:
         name:   "{{ nagios_rpms_to_add }}"
         state:  latest
       when: ansible_distribution == "CentOS"
-        
-  
+
+    # The perl-Net-SNMP is in epel, which needs to be installed first.       
+    - name: install_perl_net_snmp_rpm
+      yum:
+        name:   'perl-Net-SNMP'
+        state:  latest  
+      when: ansibile_distribution == "CentOS"
+
+    - name: copy_in_archive
+      copy:
+        src:    "{{ nagios_core }}"
+        dest:   "{{ dest_dir }}"
+        owner:  root
+        mode:   0644
+
+    - name: unarchive_file
+      command:  tar -xzvf "{{ nagois_core }}"
+      args:
+        chdir:  "{{ dest_dir }}"
+      
+

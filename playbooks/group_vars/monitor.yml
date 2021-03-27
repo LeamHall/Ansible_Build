@@ -16,7 +16,6 @@ nagios_rpms_to_add:
   - 'net-snmp-utils'
   - 'openssl-devel'
   - 'perl'
-  - 'perl-Net-SNMP'
   - 'php'
   - 'postfix'
   - 'unzip'

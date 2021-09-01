@@ -4,11 +4,110 @@
 - hosts:    monitor_1
   become:   yes
 
+  vars:
+    nagios_core:  'nagioscore-nagios-4.4.6.tar.gz'
+    dest_dir:     '/var/tmp'
+    compile_dir:  "{{ dest_dir }}/nagioscore-nagios-4.4.6"
+
   tasks:
+
+    # set selinux to passive
+
     - name: install_rpms
       yum:
         name:   "{{ nagios_rpms_to_add }}"
         state:  latest
       when: ansible_distribution == "CentOS"
+
+    # The perl-Net-SNMP is in epel, which needs to be installed first.       
+    - name: install_perl_net_snmp_rpm
+      yum:
+        name:   'perl-Net-SNMP'
+        state:  latest  
+      when: ansible_distribution == "CentOS"
+
+    - name: copy_in_archive
+      copy:
+        src:    "{{ nagios_core }}"
+        dest:   "{{ dest_dir }}"
+        owner:  root
+        mode:   0644
+
+    - name: unarchive_file
+      command:  tar -xzvf "{{ nagios_core }}"
+      args:
+        warn:     false      
+        chdir:  "{{ dest_dir }}"
+
+    - name: configure
+      command: ./configure
+      args:
+        chdir:  "{{ compile_dir }}"
+
+    - name: make_all
+      command: make all
+      args:
+        chdir:  "{{ compile_dir }}"
+    
+    - name: make_install_groups_users
+      command: make install-groups-users
+      args:
+        chdir:  "{{ compile_dir }}"
+
+    - name: usermod
+      command: usermod -a -G nagios apache
+
+    - name: install_binaries
+      command: make install
+      args:
+        chdir:  "{{ compile_dir }}"
+      
+    - name: install_service
+      command:  make install-daemoninit
+      args:
+        chdir: "{{ compile_dir }}"
+
+    - name: enable_httpd
+      ansible.builtin.systemd:
+        state:    started
+        name:     httpd
+        enabled:  yes
+
+    - name: install_commandmode
+      command: make install-commandmode
+      args:
+        chdir:  "{{ compile_dir }}"
+
+    - name: install_config
+      command: make install-config
+      args:
+        chdir:  "{{ compile_dir }}"
+
+
+    - name: install_webconf
+      command: make install-webconf
+      args:
+        chdir:  "{{ compile_dir }}"
+
+    #- name: firewall_first
+    #  command:  firewall-cmd --zone=public --add-port=80/tcp
+
+    #- name: firewall_second
+    #  command:  firewall-cmd --zone=public --add-port=80/tcp --permanent
+
+    - name: set_htpasswd
+      htpasswd:
+        path:     '/usr/local/nagios/etc/htpasswd.users'
+        name:     nagiosadmin
+        password: 'nagios_is_cool!!'
+        owner:    root
+        group:    apache
+        mode:     0640
         
-  
+    - name: enable_nagios
+      ansible.builtin.systemd:
+        state:    started
+        name:     nagios.service
+        enabled:  yes
+
+

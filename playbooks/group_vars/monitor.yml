@@ -17,6 +17,7 @@ nagios_rpms_to_add:
   - 'openssl-devel'
   - 'perl'
   - 'php'
+  - 'python-passlib'
   - 'postfix'
   - 'unzip'
   - 'wget'

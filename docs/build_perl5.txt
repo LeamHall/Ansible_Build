@@ -1,0 +1,86 @@
+# Turn off selinux
+echo "SELINUX=disabled" > /etc/selinux/config
+
+
+# Remove perl stuff
+yum -y erase perl-Socket
+yum -y erase perl-HTTP-Tiny
+yum -y erase perl-Text-ParseWords
+yum -y erase perl-Exporter
+yum -y erase perl-threads-shared
+yum -y erase perl-File-Temp
+yum -y erase perl-Getopt-Long
+yum -y erase perl-Pod-Escapes
+yum -y erase perl-Error
+yum -y erase perl-Git
+yum -y erase perl-parent
+yum -y erase perl-podlators
+yum -y erase perl-Encode
+yum -y erase perl-threads
+yum -y erase perl-Filter
+yum -y erase perl-Time-HiRes
+yum -y erase perl-constant
+yum -y erase perl-Scalar-List-Utils
+yum -y erase perl-Carp
+yum -y erase perl-File-Path
+yum -y erase perl-Pod-Simple
+yum -y erase perl-TermReadKey
+yum -y erase perl-macros
+yum -y erase perl-Pod-Perldoc
+yum -y erase perl-Pod-Usage
+yum -y erase perl-Storable
+yum -y erase perl-Time-Local
+yum -y erase perl-PathTools
+
+
+# Install needed stuff for compiling
+## yum based node.
+yum -y install gcc
+yum -y install openssl-devel
+
+mkdir /var/tmp/src
+cd /var/tmp/src
+
+# The above remove breaks git. Need to just put a tar file in,
+# or build git itself. Which is not a bad idea.
+# The source is at:   https://github.com/Perl/perl5
+
+cd perl5
+
+
+# Configure and Build
+# The -D and -U may not be needed for non-blead versions of Perl.
+
+sh Configure -de -Dusedevel -Uversiononly
+make
+make test
+
+
+# Install as root
+sudo su -
+***
+
+cd /var/tmp/src/perl5
+make install
+
+cd /usr/local/lib/perl5
+chmod -R g+rwxs site_perl
+chgrp -R syseng site_perl
+
+cd /usr/local
+mkdir man
+chgrp syseng bin
+chrgp syseng man
+chgrp -R syseng /usr/local/share/man
+chmod g+rwxs bin
+chmod g+rwxs man
+chmod -R g+rwxs /usr/local/share/man
+
+
+# Bootstrap cpanm
+wget -qO cpanm.pl https://cpanmin.us; perl cpanm.pl App::cpanminus
+
+
+# Review the list_needed_modules.pl script, and run it.
+
+

@@ -1,0 +1,49 @@
+
+# The module list was created by running this in the hex-mapping directory.
+
+grep '^use ' * |sed 's/pl:use/  /' | sed 's/;/ /'               \
+   |awk '{ print $2 }' |grep -v this |sort -u  > the_above_file
+
+# Edit the results to ensure they are clean.
+
+# Review the list_needed_modules.pl script, and run it with the above file.
+
+  ./list_needed_modules.pl the_above_file
+
+
+# It should tell you to install the following modules:
+# The "IO::Socket::SSL" module was discovered during build testing.
+
+cpanm Array::Utils >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm CGI >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm LWP::UserAgent >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm List::MoreUtils >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Math::Fractal::Noisemaker >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Math::Geometry::Voronoi >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Modern::Perl >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::Base >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::ByteStream >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::DOM >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::File >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::Log >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::URL >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::UserAgent >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojo::Util >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Mojolicious::Lite >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Role::Tiny::With >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm SVG >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm Text::Autoformat >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm URI::Escape >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+cpanm IO::Socket::SSL >> /var/tmp/cpanm_log_`date +%Y%m%d%H%M`.log 2>&1
+
+
+# Run the command to test the build
+
+./hex-describe.pl daemon -m production -l http://*:8080
+
+# Hit some links and look at the log for potential errors or issues.
+
+# Figure out the config file
+## hex-describe.conf
+
+

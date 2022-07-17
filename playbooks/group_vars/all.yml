@@ -5,3 +5,13 @@ group_packages_to_add:
   - 'tree'
   - 'vim'
   - 'mlocate'
+
+fedora_packages_to_add:
+  - 'git'
+  - 'tree'
+  - 'vim'
+
+fedora_packages_to_remove:
+  - 'dnfdragora'
+  - 'dnfdragora-updater'
+

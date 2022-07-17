@@ -11,6 +11,8 @@
 
     - include: tasks/add_packages.yml
 
+    - include: tasks/remove_packages.yml
+
     #- include: tasks/reboot_node_tasks.yml
 
 

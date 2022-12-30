@@ -1,0 +1,30 @@
+# python_devel.yml
+---
+
+- hosts: all
+  become: true
+ 
+  vars: 
+    xbps_packages:
+      - 'xz'
+      - 'sqlite-devel'
+      - 'bzip2-devel'
+      - 'gdbm-devel'
+      - 'liblzma-devel'
+      - 'tk-devel'
+      - 'readline-devel'
+      - 'ncurses-devel'
+      - 'libuuid-devel'
+      - 'zlib-devel'
+
+
+  tasks:
+
+    - name: install_xbps_packages
+      xbps:
+        name: "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ xbps_packages }}"
+
+

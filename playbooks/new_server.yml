@@ -1,6 +1,6 @@
 # new_server.yml
 # All the basic configs.
-
+---
 - hosts:  all
   become: true
 

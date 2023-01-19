@@ -1,0 +1,16 @@
+# remove_resolver_symlink.yml
+- name: get_resolver_status
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: sym
+
+- name: print_missing_debug
+  ansible.builtin.debug:
+    msg: "islink isn't defined, path does not exist"
+  when: sym.stat.islnk is not defined
+
+- name: remove_link
+  ansible.builtin.file:
+    path:   /etc/resolv.conf
+    state:  absent
+  when: sym.stat.islnk is defined and sym.stat.islnk

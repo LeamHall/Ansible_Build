@@ -5,6 +5,8 @@
   become: true
 
   tasks:
+    - include: tasks/remove_resolver_symlink.yml
+
     - include: tasks/base_server_configs.yml
 
     - include: tasks/patch.yml

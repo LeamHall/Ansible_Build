@@ -1,0 +1,99 @@
+# Just working on the two internal backup drives
+---
+
+- hosts:    shaphan
+  become:   true
+
+  vars:
+    disks:
+      - /dev/sda
+      - /dev/sdb
+
+    vgs:
+      - storage_01
+      - storage_02
+
+    lvs:
+      - usr_local_src
+      - opt_backup
+      - var_lib_docker
+
+    dirs:
+      - /usr/local/src
+      - /opt/backup
+      - /var/lib/docker
+
+  tasks:
+
+    # umount in case they are being removed/altered
+    - name: umount_filesystems
+      ansible.posix.mount:
+        path:   "{{ item }}"
+        state:  unmounted
+      loop: "{{ dirs }}"
+
+    - name: create_vg_storage_01
+      community.general.lvg:
+        vg:     "{{ vgs[0] }}"
+        state:  present
+        pvs:    "{{ disks[0] }}"
+
+    - name: create_vg_storage_02
+      community.general.lvg:
+        vg:     "{{ vgs[1] }}"
+        state:  present
+        pvs:    "{{ disks[1] }}"
+
+    - name: remove_lvs
+      community.general.lvol:
+        lv:     "{{ item }}"
+        vg:     storage_01
+        state:  absent
+        force:  true
+      loop: "{{ lvs }}"
+
+    - name: create_lvs
+      community.general.lvol:
+        vg:     storage_01
+        lv:     "{{ item.name }}"
+        size:   "{{ item.size }}"
+      loop: 
+        - { name: 'usr_local_src', size: 100G }
+        - { name: 'opt_backup', size: 500G }
+        - { name: 'var_lib_docker', size: 500G }
+
+    - name: create_filesystems
+      community.general.filesystem:
+        fstype:     ext4
+        state:      present
+        dev:        "/dev/storage_01/{{ item }}"
+      loop: "{{ lvs }}"
+
+    - name: make_mount_points
+      ansible.builtin.file:
+        path:   "{{ item }}"
+        mode:   '0775'
+        owner:  root
+        group:  syseng
+        state:  directory
+      loop: "{{ dirs }}"
+ 
+    - name: mount_filesystems
+      ansible.builtin.command:
+        "mount -t ext4 /dev/mapper/{{ item.device }} {{ item.mountpoint }}" 
+      loop:
+        - { mountpoint: "/usr/local/src", device: "storage_01-usr_local_src" }
+        - { mountpoint: "/opt/backup", device: "storage_01-opt_backup" }
+        - { mountpoint: "/var/lib/docker", device: "storage_01-var_lib_docker" }
+
+    - name: mount_filesystems
+      ansible.posix.mount:
+        path:   "{{ item.path }}"
+        src:    "/dev/mapper/{{ item.src }}"
+        fstype: ext4
+        state:  present
+      loop:
+        - { path: "/usr/local/src", src: "storage_01-usr_local_src" }
+        - { path: "/opt/backup", src: "storage_01-opt_backup" }
+        - { path: "/var/lib/docker", src: "storage_01-var_lib_docker" }
+

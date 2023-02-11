@@ -1,0 +1,9 @@
+# add_groups.yml
+---
+
+- name: add_syseng_group
+  ansible.builtin.group:
+    name:   syseng
+    gid:    500
+    state:  present
+

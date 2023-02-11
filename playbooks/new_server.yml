@@ -4,17 +4,24 @@
 - hosts:  all
   become: true
 
+  vars:
+    tasks_needed:
+      - tasks/add_groups.yml
+      - tasks/add_users.yml
+      - tasks/remove_resolver_symlink.yml
+      - tasks/base_server_configs.yml
+      - tasks/patch.yml
+      - tasks/add_packages.yml
+      - tasks/remove_packages.yml
+
+
   tasks:
-    - include: tasks/remove_resolver_symlink.yml
 
-    - include: tasks/base_server_configs.yml
+    - name: run_all_tasks
+      ansible.builtin.include_tasks:
+        file: "{{ item }}"
+      with_items: 
+        - "{{ tasks_needed }}"
 
-    - include: tasks/patch.yml
-
-    - include: tasks/add_packages.yml
-
-    - include: tasks/remove_packages.yml
-
-    #- include: tasks/reboot_node_tasks.yml
 
 

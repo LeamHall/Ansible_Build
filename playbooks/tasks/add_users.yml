@@ -1,0 +1,16 @@
+# add_users.yml
+---
+- name: add_leam
+  ansible.builtin.user:
+    name:             leam
+    non_unique:       true
+    comment:          "Leam"
+    create_home:      true
+    group:            syseng
+    home:             /home/leam
+    shell:            /bin/bash
+    skeleton:         true
+    state:            present
+    uid:              1000
+    update_password:  always
+    umask:            0022

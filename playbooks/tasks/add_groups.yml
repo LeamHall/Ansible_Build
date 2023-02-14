@@ -4,6 +4,11 @@
 - name: add_syseng_group
   ansible.builtin.group:
     name:   syseng
-    gid:    500
+    gid:    '500'
     state:  present
 
+- name: ansible_group_to_700
+  ansible.builtin.group:
+    name:   ansible
+    gid:    '700'
+    state:  present

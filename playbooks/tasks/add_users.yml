@@ -33,7 +33,7 @@
 
 - name: copy_in_leam_ssh_pub_key
   ansible.builtin.copy:
-    src:    playbooks/files/leam_authorized_keys
+    src:    leam_authorized_keys
     dest:   /home/leam/.ssh/authorized_keys
     mode:   '0600'
     owner:  leam

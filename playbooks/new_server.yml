@@ -8,6 +8,7 @@
     tasks_needed:
       - tasks/add_groups.yml
       - tasks/add_users.yml
+      - tasks/stop_services.yml
       - tasks/remove_resolver_symlink.yml
       - tasks/base_server_configs.yml
       - tasks/patch.yml

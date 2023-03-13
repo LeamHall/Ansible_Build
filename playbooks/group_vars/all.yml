@@ -1,17 +1,42 @@
 ---
 
-group_packages_to_add:
+packages_to_add:
   - 'git'
-  - 'tree'
-  - 'vim'
+  - 'hexchat'
   - 'mlocate'
+  - 'tree'
+  - 'vim-common'
 
 fedora_packages_to_add:
-  - 'git'
-  - 'tree'
-  - 'vim'
+  - 'vim-data'
+  - 'vim-filesystem'
+  - 'vim-enhanced'
+  - 'vim-default-editor'
+  - 'vim-minimal'
 
 fedora_packages_to_remove:
+  - 'bluez-libs'
+  - 'bluez'
+  - 'bluez-obexd'
+  - 'bluez-cups'
+  - 'blueman'
+  - 'NetworkManager-bluetooth'
+  - 'cockpit-bridge'
+  - 'cockpit-system'
+  - 'cockpit-selinux'
+  - 'cockpit-networkmanager'
+  - 'cockpit-storaged'
+  - 'cockpit-packagekit'
+  - 'cockpit-ws'
+  - 'cockpit'
   - 'dnfdragora'
   - 'dnfdragora-updater'
+  - 'flatpack-libs'
 
+systemd_masks:
+  - 'dnf-makecache.timer'
+  - 'systemd-homed.service'
+  - 'systemd-oomd.service'
+  - 'systemd-oomd.socket' 
+  - 'systemd-userdbd.service' 
+  - 'systemd-userdbd.socket'

@@ -8,7 +8,7 @@
 
 - name: dnf_install_packages
   dnf:
-    name: "{{ fedora_packages_to_add }}"
+    name: "{{ fedora_packages_to_add + packages_to_add }}"
     state: latest
   when: ansible_distribution == 'Fedora'
 

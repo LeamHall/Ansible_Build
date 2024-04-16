@@ -17,13 +17,23 @@
         state: latest
       when: ansible_distribution == 'Fedora'
 
-    - name: ensure_forcefsck_present
-      file:
-        name:   /forcefsck
-        state:  touch
-      when: ansible_distribution == 'CentOS'
-
     - name: patch_void_linux
       #command: /usr/bin/xbps-install -Suvy
       xbps: upgrade=yes
       when: ansible_distribution == 'void'
+
+    - name: patch_devuan_linux
+      ansible.builtin.apt:
+        upgrade:      true
+        update_cache: true
+        autoclean:    true
+        autoremove:   true
+        clean:        true
+        state:        latest
+      when: ansible_distribution == 'Devuan'
+
+    - name: ensure_forcefsck_present
+      file:
+        name:   /forcefsck
+        state:  touch
+

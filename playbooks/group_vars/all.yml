@@ -6,6 +6,18 @@ packages_to_add:
   - 'mlocate'
   - 'tree'
   - 'vim-common'
+  - 'gdb-headless'
+  - 'lzma-sdk-devel'
+  - 'readline-devel'
+  - 'libffi-devel'
+  - 'libxml2-devel'
+  - 'libxslt-devel'
+  - 'sqlite-devel'
+  - 'tk-devel'
+  - 'bzip2-devel'
+  - 'gdb-minimal'
+  - 'uuid-devel'
+  - 'gdbm-devel'
 
 fedora_packages_to_add:
   - 'vim-data'

@@ -9,18 +9,18 @@
       yum:
         name: "*"
         state: latest
-      when: ansible_distribution == 'CentOS'
+      when: ansible_pkg_mgr == 'yum'
 
     - name: patch_dnf_based_hosts
       dnf:
         name: "*"
         state: latest
-      when: ansible_distribution == 'Fedora'
+      when: ansible_pkg_mgr == 'dnf'
 
     - name: patch_void_linux
       #command: /usr/bin/xbps-install -Suvy
       xbps: upgrade=yes
-      when: ansible_distribution == 'void'
+      when: ansible_pkg_mgr == 'xbps'
 
     - name: patch_devuan_linux
       ansible.builtin.apt:
@@ -30,7 +30,7 @@
         autoremove:   true
         clean:        true
         state:        latest
-      when: ansible_distribution == 'Devuan'
+      when: ansible_pkg_mgr == 'apt'
 
     - name: ensure_forcefsck_present
       file:

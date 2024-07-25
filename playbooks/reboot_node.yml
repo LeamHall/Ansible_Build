@@ -1,0 +1,19 @@
+  # reboot_node_tasks.yml
+  # Boot servers in sequence and wait_for them to come up
+  # before booting the next one.
+
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: reboot
+      ansible.builtin.reboot:
+
+    - name: wait_for_host
+      ansible.builtin.wait_for:
+        host:     "{{ inventory_hostname }}"
+        port:     22
+        delay:    300
+        timeout:  400
+      delegate_to: localhost

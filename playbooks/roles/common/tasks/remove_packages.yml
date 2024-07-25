@@ -1,0 +1,20 @@
+# remove_packages.yml
+---
+- name: yum_remove_packages
+  ansible.builtin.yum:
+    name: "{{ centos_packages_to_remove }}"
+    state: absent
+  when: ansible_distribution == 'CentOS'
+
+- name: dnf_remove_packages
+  ansible.builtin.dnf:
+    name: "{{ fedora_packages_to_remove }}"
+    state: absent
+  when: ansible_distribution == 'Fedora'
+
+- name: xbps_remove_packages
+  community.general.xbps:
+    name:   "{{ void_packages_to_remove }}"
+    state:  absent
+  when: ansible_distribution == 'void'
+

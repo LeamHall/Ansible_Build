@@ -1,0 +1,25 @@
+
+- name: add_groups
+  import_tasks: add_groups.yml
+
+- name: add_users
+  import_tasks: add_users.yml
+
+- name: stop_services
+  import_tasks: stop_services.yml
+
+- name: remove_resolver_symlink
+  import_tasks: remove_resolver_symlink.yml
+
+- name: base_server_configs
+  import_tasks: base_server_configs.yml
+
+- name: patch
+  import_tasks: patch.yml
+
+- name: add_packages
+  import_tasks: add_packages.yml
+
+- name: remove_packages
+  import_tasks: remove_packages.yml
+

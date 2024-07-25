@@ -1,0 +1,20 @@
+# add_packages.yml
+---
+- name: yum_install_packages
+  yum:
+    name: "{{ centos_packages_to_add }}"
+    state: latest
+  when: ansible_distribution == 'CentOS'
+
+- name: dnf_install_packages
+  dnf:
+    name: "{{ fedora_packages_to_add + packages_to_add }}"
+    state: latest
+  when: ansible_distribution == 'Fedora'
+
+- name: xbps_install_packages
+  xbps:
+    name:   "{{ void_packages_to_add }}"
+    state:  latest
+  when: ansible_distribution == 'void'
+

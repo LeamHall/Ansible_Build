@@ -1,0 +1,42 @@
+# add_users.yml
+---
+- name: add_leam_group
+  ansible.builtin.group:
+    name:       leam
+    gid:        '1000'
+    state:      present
+
+- name: add_leam_user
+  ansible.builtin.user:
+    name:             leam
+    non_unique:       true
+    comment:          Leam
+    create_home:      true
+    group:            leam
+    groups:           syseng
+    append:           true
+    home:             /home/leam
+    shell:            /bin/bash
+    skeleton:         true
+    state:            present
+    uid:              '1000'
+    update_password:  always
+    umask:            '0022'
+
+- name: add_leam_ssh_dir
+  ansible.builtin.file:
+    name:   /home/leam/.ssh
+    mode:   '0700'
+    state:  directory
+    owner:  leam
+    group:  leam
+
+- name: copy_in_leam_ssh_pub_key
+  ansible.builtin.copy:
+    src:    leam_authorized_keys
+    dest:   /home/leam/.ssh/authorized_keys
+    mode:   '0600'
+    owner:  leam
+    group:  leam
+
+

@@ -1,0 +1,22 @@
+# add_groups.yml
+---
+
+- name: add_syseng_group
+  ansible.builtin.group:
+    name:   syseng
+    gid:    '500'
+    state:  present
+
+- name: syseng_sudoers
+  ansible.builtin.copy:
+    src:    500_syseng
+    dest:   /etc/sudoers.d/500_syseng
+    mode:   '0640'
+    owner:  root
+    group:  root
+
+- name: ansible_group_to_700
+  ansible.builtin.group:
+    name:   ansible
+    gid:    '700'
+    state:  present

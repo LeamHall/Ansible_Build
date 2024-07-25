@@ -1,0 +1,52 @@
+# base_server_configs.yml
+# Set up the infrastrucutre and 'normal' stuff.
+
+- block:
+  - block:
+    - name: install_ntp
+      yum:
+        name:   ntp
+        state:  latest
+
+    - name: config_ntp
+      copy:
+        src:    ntp.conf
+        dest:   /etc/ntp.conf
+        mode:   0644
+        owner:  root
+        group:  root
+
+    - name: service_ntpd_on
+      service:
+        name:     ntpd
+        enabled:  yes
+
+    when: 
+      - ansible_distribution_major_version | int <= 7
+
+  - block:
+    - name: install_chrony
+      yum:
+        name:   chrony
+        state:  latest
+
+    - name: service_chrony_on
+      service:
+        name:     chronyd
+        enabled:  yes 
+
+    when:
+      - ansible_distribution_major_version | int >= 8
+
+  when:
+    - ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
+
+
+- name: copy_in_hosts_file
+  copy:
+    src:    hosts
+    dest:   /etc/hosts
+    mode:   0644
+    owner:  root
+    group:  root
+

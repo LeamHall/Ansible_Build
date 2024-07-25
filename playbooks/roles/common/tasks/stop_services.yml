@@ -1,0 +1,10 @@
+# stop_services.yml
+---
+- name: mask_fedora_services
+  ansible.builtin.systemd:
+    name:   "{{ item }}"
+    state:  stopped
+    masked: true
+  with_items: "{{ systemd_masks }}"
+  when: ansible_distribution == "Fedora"
+

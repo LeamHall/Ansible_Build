@@ -1,0 +1,33 @@
+# remove_resolver_symlink.yml
+- name: get_resolver_status
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: sym
+
+- name: print_missing_debug
+  ansible.builtin.debug:
+    msg: "islink isn't defined, path does not exist"
+  when: sym.stat.islnk is not defined
+
+- name: remove_link
+  ansible.builtin.file:
+    path:   /etc/resolv.conf
+    state:  absent
+  when: sym.stat.islnk is defined and sym.stat.islnk
+
+- name: stop_networkmanager_dns
+  ansible.builtin.copy:
+    src:    90-dns-none.conf
+    dest:   /etc/NetworkManager/conf.d
+    mode:   '0644'
+    owner:  root
+    group:  root
+
+- name: config_resolv_conf
+  ansible.builtin.copy:
+    src:    resolv.conf
+    dest:   /etc/resolv.conf
+    mode:   '0644'
+    owner:  root
+    group:  root
+

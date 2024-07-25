@@ -4,25 +4,7 @@
 - hosts:  all
   become: true
 
-  vars:
-    tasks_needed:
-      - tasks/add_groups.yml
-      - tasks/add_users.yml
-      - tasks/stop_services.yml
-      - tasks/remove_resolver_symlink.yml
-      - tasks/base_server_configs.yml
-      - tasks/patch.yml
-      - tasks/add_packages.yml
-      - tasks/remove_packages.yml
-
-
-  tasks:
-
-    - name: run_all_tasks
-      ansible.builtin.include_tasks:
-        file: "{{ item }}"
-      with_items: 
-        - "{{ tasks_needed }}"
-
+  roles:
+    - common
 
 

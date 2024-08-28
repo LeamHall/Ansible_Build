@@ -1,0 +1,10 @@
+# compile_python.yml
+---
+- hosts:  compile_python
+  become: true
+
+  roles:
+    - common
+    - compile_python
+
+

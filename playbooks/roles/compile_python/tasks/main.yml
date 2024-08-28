@@ -1,0 +1,24 @@
+---
+# tasks file for compile_python
+
+- name: install_xbps_packages
+  ansible.builtin.xbps:
+    name: "{{ item }}"
+    state:  latest
+  with_items:
+    - "{{ xbps_packages_to_add }}"
+  when: ansible_pkg_mgr == "xbps"
+
+- name: install_apt_packages
+  ansible.builtin.apt:
+    name:         "{{ item }}"
+    state:        latest
+    update_cache: true
+    autoclean:    true
+    autoremove:   true
+    clean:        true
+
+  with_items:
+    - "{{ apt_packages_to_add }}"
+  when: ansible_pkg_mgr == "apt"
+

@@ -5,6 +5,9 @@
 - name: add_users
   import_tasks: add_users.yml
 
+- name: add_packages
+  import_tasks: add_packages.yml
+
 - name: stop_services
   import_tasks: stop_services.yml
 
@@ -16,9 +19,6 @@
 
 - name: patch
   import_tasks: patch.yml
-
-- name: add_packages
-  import_tasks: add_packages.yml
 
 - name: remove_packages
   import_tasks: remove_packages.yml

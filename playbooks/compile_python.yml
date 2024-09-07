@@ -1,10 +1,9 @@
 # compile_python.yml
 ---
-- hosts:  compile_python
+- hosts:  python_dev
   become: true
 
   roles:
-    - common
     - compile_python
 
 

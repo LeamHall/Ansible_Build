@@ -17,6 +17,7 @@ apt_packages_to_add:
   - 'libssl-dev'
   - 'lzma'
   - 'lzma-dev'
+  - 'make'
   - 'tk-dev'
   - 'uuid-dev' 
   - 'zlib1g-dev'

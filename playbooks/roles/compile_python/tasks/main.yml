@@ -1,24 +1,128 @@
 ---
 # tasks file for compile_python
 
-- name: install_xbps_packages
-  ansible.builtin.xbps:
-    name: "{{ item }}"
-    state:  latest
-  with_items:
-    - "{{ xbps_packages_to_add }}"
-  when: ansible_pkg_mgr == "xbps"
+- name: show_time
+  ansible.builtin.debug:
+    msg: "{{ datetime }}"
 
-- name: install_apt_packages
-  ansible.builtin.apt:
-    name:         "{{ item }}"
-    state:        latest
-    update_cache: true
-    autoclean:    true
-    autoremove:   true
-    clean:        true
+- name: set_up_packages_and_directories
+  block:
+    - name: install_xbps_packages
+      ansible.builtin.xbps:
+        name: "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ xbps_packages_to_add }}"
+      when: ansible_pkg_mgr == "xbps"
 
-  with_items:
-    - "{{ apt_packages_to_add }}"
-  when: ansible_pkg_mgr == "apt"
+    - name: install_apt_packages
+      ansible.builtin.apt:
+        name:         "{{ item }}"
+        state:        latest
+        update_cache: true
+        autoclean:    true
+        autoremove:   true
+        clean:        true
+      with_items:
+        - "{{ apt_packages_to_add }}"
+      when: ansible_pkg_mgr == "apt"
+
+
+    - name: make_control_node_dirs
+      ansible.builtin.file:
+        path:   "{{ item }}"
+        state:  directory
+        group:  syseng
+        mode:   g=rwx
+        owner:  root
+      with_items:
+        - "{{ directories_to_have }}"
+      delegate_to: localhost
+
+
+    - name: make_target_node_dirs
+      ansible.builtin.file:
+        path:   "{{ item }}"
+        state:  directory
+        group:  syseng
+        mode:   g=rwx
+        owner:  root
+      with_items:
+        - "{{ directories_to_have }}"
+
+  become: true
+  become_user: root
+
+
+- name: git_get
+  ansible.builtin.git:
+    repo:     "{{ cpython_repo }}"
+    dest:     "{{ git_dir }}"
+    version:  "{{ cpython_branch }}"
+    clone:    true
+
+
+- name: configure
+  ansible.builtin.command:
+    argv:
+      - ./configure
+      - --with-pydebug
+  args:
+    chdir:  "{{ git_dir }}"
+  register: config_results
+
+
+- name: log_config_results
+  ansible.builtin.copy:
+    content:  "{{ config_results }}"
+    dest:     "{{ log_dir }}/{{ ansible_hostname }}_configure_{{ datetime }}.log"    
+  delegate_to: localhost
+
+
+- name: make
+  community.general.make:
+    chdir:    "{{ git_dir }}"
+  register:   make_results
+
+
+- name: log_make_results
+  ansible.builtin.copy:
+    content:  "{{ make_results }}"
+    dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_{{ datetime }}.log"    
+  delegate_to: localhost
+
+
+- name: make_regen_global_objects
+  community.general.make:
+    target:   regen-global-objects
+    chdir:    "{{ git_dir }}"
+  register:   make_regen_global_objects_results
+
+
+- name: log_make_regen_global_objects_results
+  ansible.builtin.copy:
+    content:  "{{ make_regen_global_objects_results }}"
+    dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_regen_global_objects_{{ datetime }}.log"    
+  delegate_to: localhost
+
+
+- name: run_tests
+  ansible.builtin.command:
+    argv:
+      - ./python
+      - -m
+      - test
+      - -uall 
+      - -j0
+  args:
+    chdir:  "{{ git_dir }}"
+  register: test_results
+
+
+- name: log_test_results
+  ansible.builtin.copy:
+    content:  "{{ test_results }}"
+    dest:     "{{ log_dir }}/{{ ansible_hostname }}_test_{{ datetime }}.log"    
+  delegate_to: localhost
+
 

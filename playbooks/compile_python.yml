@@ -1,7 +1,9 @@
 # compile_python.yml
 ---
 - hosts:  python_dev
-  become: true
+
+  vars:
+    datetime: "{{ now(fmt='%Y%j.%H%M') }}"
 
   roles:
     - compile_python

@@ -62,67 +62,94 @@
     clone:    true
 
 
-- name: configure
-  ansible.builtin.command:
-    argv:
-      - ./configure
-      - --with-pydebug
-  args:
-    chdir:  "{{ git_dir }}"
-  register: config_results
+- name: do_selected_branches
+  block:
+
+    vars:
+      log_prefix = "{{ log_dir }}/{{ ansible_hostname }}_{{ item }}"
+      log_suffix = "{{ datetime }}.log"
 
 
-- name: log_config_results
-  ansible.builtin.copy:
-    content:  "{{ config_results }}"
-    dest:     "{{ log_dir }}/{{ ansible_hostname }}_configure_{{ datetime }}.log"    
-  delegate_to: localhost
+    tasks:
+      - name: checkout_version
+        ansible.builtin.git:
+          version: "{{ item }}"
+
+      - name: configure
+        ansible.builtin.command:
+          argv:
+            - ./configure
+            - --with-pydebug
+        args:
+          chdir:  "{{ git_dir }}"
+        register: config_results
 
 
-- name: make
-  community.general.make:
-    chdir:    "{{ git_dir }}"
-  register:   make_results
+      - name: log_config_results
+        ansible.builtin.copy:
+          content:  "{{ config_results }}"
+            #dest:     "{{ log_dir }}/{{ ansible_hostname }}_configure_{{ datetime }}.log"    
+          dest:     "{{ log_prefix }}_configure_{{ log_suffix }}"    
+        delegate_to: localhost
 
 
-- name: log_make_results
-  ansible.builtin.copy:
-    content:  "{{ make_results }}"
-    dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_{{ datetime }}.log"    
-  delegate_to: localhost
+      - name: make
+        community.general.make:
+          chdir:    "{{ git_dir }}"
+        register:   make_results
 
 
-- name: make_regen_global_objects
-  community.general.make:
-    target:   regen-global-objects
-    chdir:    "{{ git_dir }}"
-  register:   make_regen_global_objects_results
+      - name: log_make_results
+        ansible.builtin.copy:
+          content:  "{{ make_results }}"
+          dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_{{ datetime }}.log"    
+        delegate_to: localhost
 
 
-- name: log_make_regen_global_objects_results
-  ansible.builtin.copy:
-    content:  "{{ make_regen_global_objects_results }}"
-    dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_regen_global_objects_{{ datetime }}.log"    
-  delegate_to: localhost
+      - name: make_regen_global_objects
+        community.general.make:
+          target:   regen-global-objects
+          chdir:    "{{ git_dir }}"
+        register:   make_regen_global_objects_results
 
 
-- name: run_tests
-  ansible.builtin.command:
-    argv:
-      - ./python
-      - -m
-      - test
-      - -uall 
-      - -j0
-  args:
-    chdir:  "{{ git_dir }}"
-  register: test_results
+      - name: log_make_regen_global_objects_results
+        ansible.builtin.copy:
+          content:  "{{ make_regen_global_objects_results }}"
+          dest:     "{{ log_dir }}/{{ ansible_hostname }}_make_regen_global_objects_{{ datetime }}.log"    
+        delegate_to: localhost
 
 
-- name: log_test_results
-  ansible.builtin.copy:
-    content:  "{{ test_results }}"
-    dest:     "{{ log_dir }}/{{ ansible_hostname }}_test_{{ datetime }}.log"    
-  delegate_to: localhost
+          #- name: run_tests
+          #ansible.builtin.command:
+          #argv:
+          #  - ./python
+          #  - -m
+          #  - test
+          #  - -uall 
+          #  - -j0
+          #args:
+          #chdir:  "{{ git_dir }}"
+          #register: test_results
 
+
+          #- name: log_test_results
+          #ansible.builtin.copy:
+          #content:  "{{ test_results }}"
+          #dest:     "{{ log_dir }}/{{ ansible_hostname }}_test_{{ datetime }}.log"    
+          #delegate_to: localhost
+
+
+      - name: make_distclean
+        community.general.make:
+          target: distclean
+          chdir:  "{{ git_dir }}"
+
+
+      - name: make_docclean
+        community.general.make:
+          target: docclean
+          chdir:  "{{ git_dir }}"
+
+    loop: "{{ cpython_versions }}"
 

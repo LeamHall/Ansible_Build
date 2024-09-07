@@ -12,4 +12,7 @@ cpython_branch: 'main'
 
 log_dir: '/opt/backup/logs/'
 
-
+cpython_versions:
+  - 'main'
+  - '3.13'
+  - '3.12'

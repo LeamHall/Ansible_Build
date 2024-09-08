@@ -1,6 +1,12 @@
 ---
-# vars file for compile_python
-#
+log_prefix: "{{ log_dir }}/{{ ansible_hostname }}_{{ item }}"
+log_suffix: "{{ datetime }}.log"
+
+cpython_versions:
+  - 'main'
+  - '3.13'
+  - '3.12'
+
 apt_packages_to_add:
   - 'build-essential'
   - 'gdb'
@@ -34,3 +40,4 @@ xbps_packages_to_add:
   - 'ncurses-devel'
   - 'libuuid-devel'
   - 'zlib-devel'
+

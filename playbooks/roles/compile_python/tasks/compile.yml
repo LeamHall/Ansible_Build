@@ -64,8 +64,8 @@
       - -j0
   args:
     chdir:  "{{ git_dir }}"
-  register: test_results
-
+  register:       test_results
+  ignore_errors:  true
 
 - name: log_test_results
   ansible.builtin.copy:

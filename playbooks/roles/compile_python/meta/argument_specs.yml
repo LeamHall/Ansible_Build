@@ -1,0 +1,10 @@
+# roles/compile_python/meta/argument_specs.yml
+---
+argument_specs:
+  # roles/compile_python/tasks/main.yml entry point
+  main:
+    short_description: Entry point for the compile_python role
+    description:
+      - This installs support packages and creates directories needed for the C(compile_python) role.
+      - A log directory is created on the control node.
+      - The git repo is cloned on each target node.

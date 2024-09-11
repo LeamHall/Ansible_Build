@@ -1,6 +1,13 @@
+# roles/compile_python/vars/main.yml
 ---
+src_dir:    "/usr/local/src"
+git_dir:    "{{ src_dir }}/cpython"
+log_dir:    "/opt/backup/logs"
 log_prefix: "{{ log_dir }}/{{ ansible_hostname }}_{{ item }}"
 log_suffix: "{{ datetime }}.log"
+
+cpython_repo: 'https://github.com/python/cpython.git'
+cpython_branch: "main"
 
 cpython_versions:
   - 'main'

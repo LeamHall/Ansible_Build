@@ -45,14 +45,15 @@
     target:   regen-global-objects
     chdir:    "{{ git_dir }}"
   register:   make_regen_global_objects_results
-
+  # this target does not exist before 3.11
+  ignore_errors:  true
 
 - name: log_make_regen_global_objects_results
   ansible.builtin.copy:
     content:  "{{ make_regen_global_objects_results }}"
     dest:     "{{ log_prefix }}_make_regen_global_objects_{{ log_suffix }}"    
   delegate_to: localhost
-
+  
 
 - name: run_tests
   ansible.builtin.command:

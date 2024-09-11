@@ -1,15 +1,11 @@
+# roles/compile_python/tasks/main/yml
 ---
-# tasks file for compile_python
-
-- name: show_time
-  ansible.builtin.debug:
-    msg: "{{ datetime }}"
 
 - name: set_up_packages_and_directories
   block:
     - name: install_xbps_packages
       ansible.builtin.xbps:
-        name: "{{ item }}"
+        name:   "{{ item }}"
         state:  latest
       with_items:
         - "{{ xbps_packages_to_add }}"
@@ -27,28 +23,22 @@
         - "{{ apt_packages_to_add }}"
       when: ansible_pkg_mgr == "apt"
 
-
-    - name: make_control_node_dirs
+    - name: make_control_node_log_dir
       ansible.builtin.file:
-        path:   "{{ item }}"
+        path:   "{{ log_dir }}"
         state:  directory
         group:  syseng
         mode:   g=rwx
         owner:  root
-      with_items:
-        - "{{ directories_to_have }}"
       delegate_to: localhost
 
-
-    - name: make_target_node_dirs
+    - name: make_target_node_src_dir
       ansible.builtin.file:
-        path:   "{{ item }}"
+        path:   "{{ src_dir }}"
         state:  directory
         group:  syseng
         mode:   g=rwx
         owner:  root
-      with_items:
-        - "{{ directories_to_have }}"
 
   become: true
   become_user: root
@@ -65,5 +55,6 @@
 - name: do_selected_branches
   include_tasks: compile.yml
   vars:
-    version: "{{ item }}"
+    version:  "{{ item }}"
   with_items: "{{ cpython_versions }}"
+

@@ -80,6 +80,10 @@
     target: distclean
     chdir:  "{{ git_dir }}"
 
-
+- name: make_install
+  community.general.make:
+    target: install
+    chdir:  "{{ git_dir }}"
+  when: "{{ install_branch }}" == True
 
 

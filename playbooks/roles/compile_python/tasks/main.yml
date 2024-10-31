@@ -23,6 +23,22 @@
         - "{{ apt_packages_to_add }}"
       when: ansible_pkg_mgr == "apt"
 
+    - name: install_dnf_packages
+      ansible.builtin.dnf:
+        name:   "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ dnf_packages_to_add }}"
+      when: ansible_pkg_mgr == "dnf"
+
+    #- name: dnf_builddep
+    #  ansible.builtin.command:
+    #    argv:
+    #      - dnf
+    #      - builddep
+    #      - python3
+    #  when: ansible_pkg_mgr == "dnf"
+
     - name: make_control_node_log_dir
       ansible.builtin.file:
         path:   "{{ log_dir }}"

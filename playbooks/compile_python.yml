@@ -6,6 +6,8 @@
     datetime: "{{ now(fmt='%Y%j.%H%M') }}"
     log_prefix: "{{ log_dir }}/{{ ansible_hostname }}_{{ version }}_"
     log_suffix: "{{ datetime }}.log"
+    install_branch:  True
+    python_branch: main
 
   roles:
     - compile_python

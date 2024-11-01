@@ -42,11 +42,13 @@ xbps_packages_to_add:
   - 'bzip2-devel'
   - 'gdbm-devel'
   - 'liblzma-devel'
+  - 'make'
   - 'tk-devel'
   - 'readline-devel'
   - 'ncurses-devel'
   - 'libuuid-devel'
   - 'zlib-devel'
+
 
 dnf_packages_to_add:
   - 'gcc'
@@ -74,4 +76,5 @@ dnf_packages_to_add:
   - 'python3-pip'
   - 'git'
   - 'pkg-config'
+  - 'make'
 

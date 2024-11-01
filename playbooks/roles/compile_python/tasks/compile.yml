@@ -68,6 +68,7 @@
   register:       test_results
   ignore_errors:  true
 
+
 - name: log_test_results
   ansible.builtin.copy:
     content:  "{{ test_results }}"
@@ -75,15 +76,15 @@
   delegate_to: localhost
 
 
-- name: make_distclean
-  community.general.make:
-    target: distclean
-    chdir:  "{{ git_dir }}"
-
 - name: make_install
   community.general.make:
     target: install
     chdir:  "{{ git_dir }}"
-  when: "{{ install_branch }}" == True
+  when: install_branch
 
+
+- name: make_distclean
+  community.general.make:
+    target: distclean
+    chdir:  "{{ git_dir }}"
 

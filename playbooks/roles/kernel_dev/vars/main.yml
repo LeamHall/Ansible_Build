@@ -1,0 +1,22 @@
+---
+# vars file for kernel_dev
+#
+dnf_packages_to_add:
+ - "vim"
+ - "git"
+ - "cscope"
+ - "bison"
+ - "flex"
+ - "git-email"
+ - "m4"
+ - "gcc"
+ - "mokutil"
+ - "patch"
+ - "autoconf"
+ - "automake"
+ - "byacc"
+ - "patchutils"
+ - "valgrind"
+ - "valgrind-devel"
+ - "kernel-devel"
+

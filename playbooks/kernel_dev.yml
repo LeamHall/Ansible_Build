@@ -1,0 +1,15 @@
+# kernel_dev.yml
+---
+- hosts:  kernel_dev
+
+  vars:
+    datetime: "{{ now(fmt='%Y%j.%H%M') }}"
+    log_prefix: "{{ log_dir }}/{{ ansible_hostname }}_{{ version }}_"
+    log_suffix: "{{ datetime }}.log"
+    # install_branch:  True
+    kernel_branch: linux-6.12.y
+
+  roles:
+    - kernel_dev
+
+

@@ -1,0 +1,18 @@
+---
+# tasks file for kernel_dev
+
+- name: install_packages
+  block:
+    - name: install_dnf_packages
+      ansible.builtin.dnf:
+        name:   "{{ item }}"
+        state:  latest
+      with_items:
+        - "{{ dnf_packages_to_add }}"
+      when: ansible_pkg_mgr == "dnf"
+
+  become: true
+  become_user: root
+
+
+

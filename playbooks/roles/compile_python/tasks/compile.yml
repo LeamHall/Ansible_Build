@@ -40,19 +40,19 @@
   delegate_to: localhost
 
 
-- name: make_regen_global_objects
-  community.general.make:
-    target:   regen-global-objects
-    chdir:    "{{ git_dir }}"
-  register:   make_regen_global_objects_results
-  # this target does not exist before 3.11
-  ignore_errors:  true
+#- name: make_regen_global_objects
+#  community.general.make:
+#    target:   regen-global-objects
+#    chdir:    "{{ git_dir }}"
+#  register:   make_regen_global_objects_results
+#  # this target does not exist before 3.11
+#  ignore_errors:  true
 
-- name: log_make_regen_global_objects_results
-  ansible.builtin.copy:
-    content:  "{{ make_regen_global_objects_results }}"
-    dest:     "{{ log_prefix }}_make_regen_global_objects_{{ log_suffix }}"    
-  delegate_to: localhost
+#- name: log_make_regen_global_objects_results
+#  ansible.builtin.copy:
+#    content:  "{{ make_regen_global_objects_results }}"
+#    dest:     "{{ log_prefix }}_make_regen_global_objects_{{ log_suffix }}"    
+#  delegate_to: localhost
   
 
 - name: run_tests
@@ -80,11 +80,30 @@
   community.general.make:
     target: install
     chdir:  "{{ git_dir }}"
+  register: install_results
+  become: true
+  become_user: root
   when: install_branch
+
+
+- name: log_make_install
+  ansible.builtin.copy:
+    content:  "{{ install_results }}"
+    dest:     "{{ log_prefix }}_install_{{ log_suffix }}"    
+  delegate_to: localhost
 
 
 - name: make_distclean
   community.general.make:
     target: distclean
     chdir:  "{{ git_dir }}"
+  register: distclean_results
+
+
+- name: log_make_distclean
+  ansible.builtin.copy:
+    content:  "{{ distclean_results }}"
+    dest:     "{{ log_prefix }}_distclean_{{ log_suffix }}"    
+  delegate_to: localhost
+
 

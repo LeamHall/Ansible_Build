@@ -8,6 +8,7 @@
     log_suffix: "{{ datetime }}.log"
     install_branch:  True
     python_branch: main
+    purge:  True
 
   roles:
     - compile_python

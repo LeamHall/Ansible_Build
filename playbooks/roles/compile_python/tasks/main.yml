@@ -1,5 +1,14 @@
-# roles/compile_python/tasks/main/yml
+# roles/compile_python/tasks/main.yml
 ---
+
+- name: purge_old_build_artifacts
+  ansible.builtin.include_tasks: purge.yml
+  args:
+    apply: 
+      become: true
+      become_user: root
+  when: purge
+
 
 - name: set_up_packages_and_directories
   block:

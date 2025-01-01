@@ -1,0 +1,37 @@
+---
+
+
+- name: purge_ulb
+  ansible.builtin.file:
+    state: absent
+    path: "{{ ulb }}/{{ item }}"
+  with_items: "{{ ulb_to_remove }}"
+
+
+- name: purge_uli
+  ansible.builtin.file:
+    state: absent
+    path: "{{ uli }}/{{ item }}"
+  with_items: "{{ uli_to_remove }}"
+
+
+- name: purge_ull
+  ansible.builtin.file:
+    state: absent
+    path: "{{ ull }}/{{ item }}"
+  with_items: "{{ ull_to_remove }}"
+
+
+- name: purge_ullp
+  ansible.builtin.file:
+    state: absent
+    path: "{{ ullp }}/{{ item }}"
+  with_items: "{{ ullp_to_remove }}"
+
+
+- name: purge_ulsmm1
+  ansible.builtin.file:
+    state: absent
+    path: "{{ ulsmm1 }}/{{ item }}"
+  with_items: "{{ ulsmm1_to_remove }}"
+

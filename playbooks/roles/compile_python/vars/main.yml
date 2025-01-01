@@ -14,6 +14,12 @@ cpython_versions:
   - '3.13'
   - '3.12'
 
+ulb: "/usr/local/bin"
+uli: "/usr/local/include"
+ull: "/usr/local/lib"
+ullp: "/usr/local/lib/pkgconfig"
+ulsmm1: "/usr/local/share/man/man1"
+
 apt_packages_to_add:
   - 'build-essential'
   - 'gdb'
@@ -79,4 +85,71 @@ dnf_packages_to_add:
   - 'xz'
   - 'xz-devel'
   - 'zlib-devel'
+
+ulb_to_remove:
+  - '2to3'
+  - '2to3-3.12'
+  - 'idle3'
+  - 'idle3.12'
+  - 'idle3.13'
+  - 'idle3.14'
+  - 'pip3'
+  - 'pip3.12'
+  - 'pip3.13'
+  - 'pip3.14'
+  - 'pydoc3'
+  - 'pydoc3.12'
+  - 'pydoc3.13'
+  - 'pydoc3.14'
+  - 'python3'
+  - 'python3.12'
+  - 'python3.12-config'
+  - 'python3.12d'
+  - 'python3.12d-config'
+  - 'python3.13'
+  - 'python3.13-config'
+  - 'python3.13d'
+  - 'python3.13d-config'
+  - 'python3.14'
+  - 'python3.14-config'
+  - 'python3.14d'
+  - 'python3.14d-config'
+  - 'python3-config'
+
+ull_to_remove:
+  - 'libpython3.12d.a'
+  - 'libpython3.13d.a'
+  - 'libpython3.14d.a'
+  - 'python3.12'
+  - 'python3.13'
+  - 'python3.14'
+
+ullp_to_remove:
+  - 'python-3.12d-embed.pc'
+  - 'python-3.12d.pc'
+  - 'python-3.12-embed.pc'
+  - 'python-3.12.pc'
+  - 'python-3.13d-embed.pc'
+  - 'python-3.13d.pc'
+  - 'python-3.13-embed.pc'
+  - 'python-3.13.pc'
+  - 'python-3.14d-embed.pc'
+  - 'python-3.14d.pc'
+  - 'python-3.14-embed.pc'
+  - 'python-3.14.pc'
+  - 'python3-embed.pc'
+  - 'python3.pc'
+
+ulsmm1_to_remove:
+  - 'python3.1'
+  - 'python3.12.1'
+  - 'python3.13.1'
+  - 'python3.14.1'
+
+uli_to_remove:
+  - 'python3.12d'
+  - 'python3.13d'
+  - 'python3.14d'
+
+
 
